@@ -1,0 +1,1 @@
+Just a project made to play a rol campaign with my friends group. We did an isekai campaign so we receive our class randomly and i wanted to make it more visual. You can use it freely and swap any image or text class to cover your own campaign classes. 
