@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomizador de Opciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #000;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            margin: 0 auto;
+            width: 80%;
+        }
+        .option {
+            display: inline-block;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #1a1a1a;
+            width: 300px;
+            height: 400px;
+        }
+        img {
+            max-width: 250px;
+            max-height: 250px;
+        }
+        h2 {
+            color: #fff;
+            font-size: 24px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #444;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #666;
+        }
+        .share-link {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #444;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .share-link:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Randomizador de Opciones</h1>
+        <button onclick="generarOpciones()">Generar Opciones</button>
+        <div id="opciones"></div>
+        <a href="#" id="shareLink" class="share-link">Compartir</a>
+    </div>
+
+    <audio id="musicaFondo" loop>
+        <source src="https://drive.google.com/file/d/1gL6RPOEBs55aCMgopeH2mQCzKc0zhvvj/view?usp=sharing">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <script>
+        // Lista de opciones con imágenes
+        const opciones = [
+            { nombre: 'Asesino', imagen: 'https://traslaultimafrontera.wordpress.com/wp-content/uploads/2017/11/6a01774476d922970d01a511fac154970c.jpg?w=474' },
+            { nombre: 'Hemomántico', imagen: 'https://pm1.aminoapps.com/7317/70a57b3a06dedf823214bd8f8a6019c0ebe1b2f3r1-736-918v2_hq.jpg' },
+            { nombre: 'Juggernaut', imagen: 'https://preview.redd.it/w2h1x45aazj41.jpg?width=1080&crop=smart&auto=webp&s=6682cfe402389a9e14d7458f6a060070609471c7' },
+            { nombre: 'Bardo', imagen: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg2ryFqg1z6W1Ee3k80jHCvlnv9EP0WW2T40dCL5uadAO9RHQW1PyfC3PqfOyRBG0c1yMAR9plFanLJD_EmisEDxtjvcaIyZgCqtTg_oBWnQezgmrKIP9ZXonDmMt-b483oH1fM26hzvfr8/s1600/Introducci%25C3%25B3n+a+las+clases+de+Dungeons+%2526+Dragons+-+El+Bardo+-+Colegio+Espadas.jpg' },
+            { nombre: 'Druida', imagen: 'https://i.redd.it/d2e7wzaaqru91.jpg' },
+            { nombre: 'Arcanista', imagen: 'https://i.pinimg.com/736x/de/48/65/de4865c45c29134e644cfbe0bcb6eade.jpg' },
+            { nombre: 'Bárbaro', imagen: 'https://ih1.redbubble.net/image.5135087692.9759/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg' },
+            { nombre: 'Monje', imagen: 'https://cdnb.artstation.com/p/assets/images/images/025/230/969/large/raul-maldonado-monje.jpg?1585099045' },
+            { nombre: 'Mago', imagen: 'https://img.freepik.com/fotos-premium/pintura-mago-larga-barba-blanca-sombrero_900321-14790.jpg' },
+            { nombre: 'Señor de la guerra', imagen: 'https://i.pinimg.com/736x/03/92/c4/0392c44e29cfaff04890dd15f0b102be.jpg' },
+            { nombre: 'Paladín', imagen: 'https://i.pinimg.com/originals/77/55/ed/7755ed1dfc30018919b0a5f09eebbf5d.jpg' },
+            { nombre: 'Sacerdote', imagen: 'https://i.pinimg.com/564x/d7/94/1b/d7941b1b750caca9e2728f8eee7f49c3.jpg' },
+            { nombre: 'Arquero', imagen: 'https://i.pinimg.com/originals/e4/d3/c1/e4d3c13c8d0636cb556fc81ed70afe8b.jpg' },
+            { nombre: 'Mentalista', imagen: 'https://i.pinimg.com/736x/e6/9e/19/e69e19173f655643b82f1bf381003382.jpg' },
+            { nombre: 'Alomante', imagen: 'https://i.pinimg.com/originals/6c/fb/1c/6cfb1c2f6656b2a7afc161156a68acb6.jpg' },
+            { nombre: 'Brujo', imagen: 'https://i.pinimg.com/236x/a1/c9/fb/a1c9fb7541e0b120593146a599097e75.jpg' },
+            { nombre: 'Hechicero', imagen: 'https://i.pinimg.com/736x/f1/45/37/f14537a2d881b548e9ad2922c48796e7.jpg' },
+            { nombre: 'Escudero', imagen: 'https://ih1.redbubble.net/image.2427054848.7666/flat,750x,075,f-pad,750x1000,f8f8f8.jpg' },
+            { nombre: 'Shinobi', imagen: 'https://storage.googleapis.com/pod_public/1300/123596.jpg' },
+            { nombre: 'Tempomante', imagen: 'https://i.pinimg.com/originals/31/dc/2e/31dc2e19d700c282d1f83f23144301fc.png' },
+            { nombre: 'Dimensomante', imagen: 'https://img.freepik.com/fotos-premium/mago-entra-portal-mundo-magico_237803-95.jpg?w=360' },
+            { nombre: 'Bruto', imagen: 'https://i.pinimg.com/736x/28/17/09/281709559c364cd6f418b5ff1af35e69.jpg' }
+        ];
+
+        // Función para generar 3 opciones aleatorias
+        function generarOpciones() {
+            const opcionesSeleccionadas = [];
+            while (opcionesSeleccionadas.length < 3) {
+                const opcion = opciones[Math.floor(Math.random() * opciones.length)];
+                if (!opcionesSeleccionadas.includes(opcion)) {
+                    opcionesSeleccionadas.push(opcion);
+                }
+            }
+
+            // Mostrar las opciones seleccionadas
+            const contenedorOpciones = document.getElementById('opciones');
+            contenedorOpciones.innerHTML = ''; // Limpiar contenido anterior
+            opcionesSeleccionadas.forEach(opcion => {
+                const div = document.createElement('div');
+                div.classList.add('option');
+                div.innerHTML = `
+                    <h2>${opcion.nombre}</h2>
+                    <img src="${opcion.imagen}" alt="${opcion.nombre}">
+                `;
+                contenedorOpciones.appendChild(div);
+            });
+
+            // Reproducir música de fondo
+            const musica = document.getElementById('musicaFondo');
+            musica.play();
+
+            // Crear el link para compartir
+            const linkCompartir = window.location.href;
+            document.getElementById('shareLink').href = linkCompartir;
+        }
+    </script>
+
+</body>
+</html>
