@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Opciones</title>
+    <style>
+        body { background-color: black; color: white; text-align: center; font-family: Arial, sans-serif; }
+        .container { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+        .option { border: 2px solid white; padding: 30px; border-radius: 10px; background-color: #222; cursor: pointer; }
+        img { width: 300px; height: 300px; border-radius: 5px; }
+        button { background-color: white; color: black; padding: 10px 20px; font-size: 18px; border: none; cursor: pointer; margin-top: 20px; }
+        button:hover { background-color: gray; }
+        .selectedOption { font-size: 40px; font-weight: bold; margin-top: 20px; }
+        video { width: 80%; max-width: 800px; margin-top: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Generador de Opciones</h1>
+    <button onclick="generarOpciones()">Generar Opciones</button>
+    <div class="container" id="opciones"></div>
+    
+    <div id="videoContainer" style="display: none; margin-top: 20px; display: flex; justify-content: center; align-items: center;">
+        <div>
+            <p id="selectedOption" class="selectedOption"></p>
+            <video id="video" controls>
+                <source id="videoSource" src="" type="video/mp4">
+                Tu navegador no soporta el formato de video.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        const opciones = [
+            { nombre: "Bardo", imagen: "bardo.jpg", video: "videos/video_bardo.mp4" },
+            { nombre: "Druida", imagen: "druida.jpg", video: "videos/video_druida.mp4" },
+            { nombre: "Arcanista", imagen: "arcanista.jpg", video: "videos/video_arcanista.mp4" },
+            { nombre: "Geomante", imagen: "geomante.jpg", video: "videos/video_geomante.mp4" },
+            { nombre: "Arquero", imagen: "arquero.jpg", video: "videos/video_arquero.mp4" },
+            { nombre: "Escudero", imagen: "escudero.jpg", video: "videos/video_escudero.mp4" },
+            { nombre: "Tempomante", imagen: "tempomante.jpg", video: "videos/video_tempomante.mp4" }
+        ];
+
+        let vecesGeneradas = 0;
+
+        function generarOpciones() {
+            let seleccionadas = new Set();
+
+            // Si es la primera o segunda vez que se generan opciones, siempre incluir Arcanista
+            if (vecesGeneradas < 2) {
+                seleccionadas.add("Arcanista");
+            }
+
+            // Generar dos opciones adicionales para llegar a tres opciones
+            while (seleccionadas.size < 3) {
+                let aleatoria = opciones[Math.floor(Math.random() * opciones.length)].nombre;
+                seleccionadas.add(aleatoria);
+            }
+
+            // Asegurarse de que "Arcanista" esté entre las opciones y cambiar su posición aleatoriamente
+            seleccionadas = Array.from(seleccionadas);
+            seleccionadas = seleccionadas.sort(() => Math.random() - 0.5); // Mezclamos las opciones
+
+            vecesGeneradas++;
+
+            const contenedor = document.getElementById("opciones");
+            contenedor.innerHTML = "";
+
+            seleccionadas.forEach(nombre => {
+                let opcion = opciones.find(o => o.nombre === nombre);
+                let div = document.createElement("div");
+                div.className = "option";
+                div.innerHTML = `<img src="${opcion.imagen}" alt="${nombre}"><p>${nombre}</p>`;
+                div.onclick = () => mostrarVideo(opcion);  // Asociar la función de mostrar el video al hacer clic
+                contenedor.appendChild(div);
+            });
+        }
+
+        function mostrarVideo(opcionSeleccionada) {
+            const videoContainer = document.getElementById("videoContainer");
+            videoContainer.style.display = "flex";
+
+            const video = document.getElementById("video");
+            const videoSource = document.getElementById("videoSource");
+            const selectedOption = document.getElementById("selectedOption");
+
+            selectedOption.textContent = `Opción seleccionada: ${opcionSeleccionada.nombre}`;
+            videoSource.src = opcionSeleccionada.video;
+
+            // Asegurarse de que el video se recargue y se reproduzca correctamente
+            video.load();
+            video.play().catch(error => {
+                console.error("Error al intentar reproducir el video:", error);
+                alert("Hubo un problema al reproducir el video.");
+            });
+        }
+    </script>
+</body>
+</html>
